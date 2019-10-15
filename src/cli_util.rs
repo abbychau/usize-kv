@@ -18,16 +18,22 @@ fn print_usage(program: &str, opts: Options) {
     print!("{}", opts.usage(&brief));
 }
 
-pub fn set_opts_get_opts() -> (String, String) {
+pub fn set_opts_get_opts() -> (String, String, String) {
     let args: Vec<String> = env::args().collect();
 
     let mut opts = Options::new();
     opts.optopt("p", "port", "set port of server (default: 9123)", "PORT");
     opts.optopt(
-        "f",
-        "file",
+        "s",
+        "store",
         "set uskv storage path (default: ./store.uskv)",
         "FILE",
+    );
+    opts.optopt(
+        "f",
+        "fragment",
+        "set uskv fragment path (default: ./fragment.uskv)",
+        "FRAGMENT",
     );
     opts.optflag("h", "help", "print this help menu");
     let program = args[0].clone();
@@ -51,13 +57,20 @@ pub fn set_opts_get_opts() -> (String, String) {
             }
         }
     );
-    let filename = match matches.opt_str("f") {
+    let filename = match matches.opt_str("s") {
         Some(p) => p,
         None => {
             println!("File is not defined, using port store.uskv .");
             "store.uskv".to_string()
         }
     };
+    let fragment = match matches.opt_str("f") {
+        Some(p) => p,
+        None => {
+            println!("File is not defined, using port store.uskv .");
+            "fragment.uskv".to_string()
+        }
+    };
 
-    (host, filename)
+    (host, filename, fragment)
 }
