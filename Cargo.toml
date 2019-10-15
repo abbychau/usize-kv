@@ -10,3 +10,10 @@ edition = "2018"
 evmap = "7.1.0"
 may = "0.3.12"
 getopts = "0.2.21"
+
+[dev-dependencies]
+criterion = "0.3.0"
+
+[[bench]]
+name = "benchmark1"
+harness = false

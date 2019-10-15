@@ -52,7 +52,7 @@ pub fn set_opts_get_opts() -> (String, String, String) {
         match matches.opt_str("p") {
             Some(p) => p,
             None => {
-                println!("Port is not defined, using port 9123 .");
+                println!("Using default port : 9123 .");
                 "9123".to_string()
             }
         }
@@ -60,14 +60,14 @@ pub fn set_opts_get_opts() -> (String, String, String) {
     let filename = match matches.opt_str("s") {
         Some(p) => p,
         None => {
-            println!("File is not defined, using port store.uskv .");
+            println!("Using default store file path, 'store.uskv' .");
             "store.uskv".to_string()
         }
     };
     let fragment = match matches.opt_str("f") {
         Some(p) => p,
         None => {
-            println!("File is not defined, using port store.uskv .");
+            println!("Using default fragment file path, 'fragment.uskv' .");
             "fragment.uskv".to_string()
         }
     };
