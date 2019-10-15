@@ -33,7 +33,21 @@ It is specialized for one-to-many relation for NOSQL / key-less structure of dat
 3. Read Lock-less and Read-Write isolation. That writing will never produce locks to harm reading performance.
 ![Read throughput](https://github.com/jonhoo/rust-evmap/raw/master/benchmark/read-throughput.png)
 4. Total binary transaction from internal to TCP communication.
-e.g. `00 00 00 00 00 00 00 00 FF FF FF FF FF FF FF FF 00 00 00 00 00 00 00 00` to get data from key `INT_MAX`.
+
+## usage
+
+### start
+`cargo run`
+
+### API
+
+A client connects to a usize-kv server by creating a TCP connection to the port 9123.
+Servers receive 64*3=192-bit commands.
+The first 64 bits are reserved for command. (Refer to [Operation](docs/operations.md))
+The second 64 bits are reserved for key.
+The third 64 bits are reserved for value.
+Read: `00 00 00 00 00 00 00 00 FF FF FF FF FF FF FF FF 00 00 00 00 00 00 00 00` is to read the value of key `INT_MAX`
+Write: `00 00 00 00 00 00 00 01 FF FF FF FF FF FF FF FF 00 00 00 00 00 00 00 02` is to append the value of key `INT_MAX` as value `2`
 
 ## warning
 This project is under development. It may not be even usable.
