@@ -8,3 +8,5 @@ edition = "2018"
 
 [dependencies]
 evmap = "7.1.0"
+may = "0.3.12"
+getopts = "0.2.21"
