@@ -36,7 +36,12 @@ pub fn start_server(
 
                         if res.is_some() {
                             for item in res.unwrap() {
-                                ms.write(&item.to_be_bytes()).unwrap();
+                                match ms.write(&item.to_be_bytes()) {
+                                    Ok(_) => {}
+                                    Err(_) => {
+                                        println!("Broken");
+                                    }
+                                }
                             }
                         }
                     }

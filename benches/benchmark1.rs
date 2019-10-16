@@ -9,38 +9,33 @@ use std::net::TcpStream;
 use std::str::from_utf8;
 
 fn test1(n: u64) {
-    match TcpStream::connect("localhost:9123") {
-        Ok(mut stream) => {
-            println!("Successfully connected to server in port 9123");
+    for _ in 0..1 {
+        match TcpStream::connect("127.0.0.1:9123") {
+            Ok(mut stream) => {
+                //println!("Successfully connected to server in port 9123");
 
-            for _ in 0..10000 {
                 stream
                     .write(&[
-                        0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 15, 0, 0, 0, 0, 0, 0, 15,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 15, 0, 0, 0, 0, 0, 0, 15,
                     ])
                     .unwrap();
 
-                let mut data = [0 as u8; 6]; // using 6 byte buffer
-                match stream.read_exact(&mut data) {
+                let mut data = [0 as u8; 24]; // using 6 byte buffer
+                match stream.read(&mut data[..]) {
                     Ok(_) => {
-                        if &data == msg {
-                            println!("Reply is ok!");
-                        } else {
-                            let text = from_utf8(&data).unwrap();
-                            println!("Unexpected reply: {}", text);
-                        }
+                        //println!("Reply is {:?}",&data);
                     }
                     Err(e) => {
-                        println!("Failed to receive data: {}", e);
+                        //println!("Failed to receive data: {}", e);
                     }
                 }
             }
-        }
-        Err(e) => {
-            println!("Failed to connect: {}", e);
+            Err(e) => {
+                println!("Failed to connect: {}", e);
+            }
         }
     }
-    println!("Terminated.");
+    //println!("Terminated.");
 }
 
 fn criterion_benchmark(c: &mut Criterion) {
