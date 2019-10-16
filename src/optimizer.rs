@@ -1,7 +1,7 @@
-use evmap::{self, WriteHandle};
-use std::sync::{Arc, Mutex};
 use crate::Reader;
 use crate::Writer;
+use evmap::{self, WriteHandle};
+use std::sync::{Arc, Mutex};
 
 pub fn optimize(w: Arc<Mutex<Writer>>) {}
 

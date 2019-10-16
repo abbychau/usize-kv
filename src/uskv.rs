@@ -7,6 +7,7 @@ use std::sync::{Arc, Mutex};
 use crate::Reader;
 use crate::Writer;
 
+#[derive(Clone)]
 pub struct Uskv {
     pub store_file: Arc<Mutex<::std::fs::File>>,
     pub fragment_file: Arc<Mutex<::std::fs::File>>,
@@ -64,11 +65,7 @@ impl Uskv {
         buckets_w.refresh();
     }
 
-    pub fn recover_from_uskv(
-        store_path: &str,
-        fragment_path: &str,
-        w: Arc<Mutex<Writer>>,
-    ) {
+    pub fn recover_from_uskv(store_path: &str, fragment_path: &str, w: Arc<Mutex<Writer>>) {
         let mut buckets_w = w.lock().unwrap();
 
         if !Path::new(store_path).exists() {
