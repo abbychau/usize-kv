@@ -1,9 +1,8 @@
-use crate::Reader;
+//use crate::Reader;
 use crate::Writer;
-use evmap::{self, WriteHandle};
 use std::sync::{Arc, Mutex};
 
-pub fn optimize(w: Arc<Mutex<Writer>>) {}
+// pub fn optimize(_w: Arc<Mutex<Writer>>) {}
 
 pub fn start_optimizer(w: Arc<Mutex<Writer>>) {
     ::std::thread::spawn(move || {

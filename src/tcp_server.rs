@@ -31,6 +31,7 @@ pub fn start_server(
                 let val: [u8; 8] = [c[16], c[17], c[18], c[19], c[20], c[21], c[22], c[23]];
                 match c[7] {
                     0 => {
+                        // non-blocking // victim-immune
                         let res = engine.read(u64::from_be_bytes(key));
 
                         if res.is_some() {
@@ -40,14 +41,17 @@ pub fn start_server(
                         }
                     }
                     1 => {
+                        // need store lock
                         engine.append(u64::from_be_bytes(key), u64::from_be_bytes(val));
                         ms.write(&[0]).unwrap();
                     }
                     2 => {
+                        // need store lock and fragment lock 
                         engine.update(u64::from_be_bytes(key), u64::from_be_bytes(val));
                         ms.write(&[0]).unwrap();
                     }
                     3 => {
+                        // stop the world
                         engine.purge();
                         ms.write(&[0]).unwrap();
                     }
