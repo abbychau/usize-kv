@@ -4,10 +4,12 @@ use may::net::TcpListener;
 use std::io::{Read, Write};
 use std::sync::{Arc, Mutex};
 use std::thread::{self, JoinHandle};
+use crate::Reader;
+use crate::Writer;
 
 pub fn start_server(
-    buckets_r: ReadHandle<u64, u64>,
-    writers: Arc<Mutex<WriteHandle<u64, u64>>>,
+    buckets_r: Reader,
+    writers: Arc<Mutex<Writer>>,
     fss: Arc<Mutex<::std::fs::File>>,
     frag_fss: Arc<Mutex<::std::fs::File>>,
     listener: TcpListener,

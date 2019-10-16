@@ -4,11 +4,14 @@ use std::io::Write;
 use std::path::Path;
 use std::sync::{Arc, Mutex};
 
+use crate::Reader;
+use crate::Writer;
+
 pub struct Uskv {
     pub store_file: Arc<Mutex<::std::fs::File>>,
     pub fragment_file: Arc<Mutex<::std::fs::File>>,
-    pub read_handle: evmap::ReadHandle<u64, u64>,
-    pub write_arc: Arc<Mutex<WriteHandle<u64, u64>>>,
+    pub read_handle: Reader,
+    pub write_arc: Arc<Mutex<Writer>>,
 }
 impl Uskv {
     pub fn append(&self, key: u64, value: u64) {
@@ -64,7 +67,7 @@ impl Uskv {
     pub fn recover_from_uskv(
         store_path: &str,
         fragment_path: &str,
-        w: Arc<Mutex<WriteHandle<u64, u64>>>,
+        w: Arc<Mutex<Writer>>,
     ) {
         let mut buckets_w = w.lock().unwrap();
 
