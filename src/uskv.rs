@@ -45,20 +45,20 @@ impl Uskv {
         buckets_w.insert(key, value);
         buckets_w.refresh();
     }
-/* // require super global operation log.
-    pub fn empty(&self, key: u64) {
-        self.write_arc.lock().unwrap().empty(key);
-    }
+    /* // require super global operation log.
+        pub fn empty(&self, key: u64) {
+            self.write_arc.lock().unwrap().empty(key);
+        }
 
-    pub fn remove(&self, key: u64, value: u64) {
-        self.write_arc.lock().unwrap().remove(key,value);
-    }
+        pub fn remove(&self, key: u64, value: u64) {
+            self.write_arc.lock().unwrap().remove(key,value);
+        }
 
-    pub fn unique(&self, key: u64) {
-        let wt = self.write_arc.lock().unwrap();
-        
-    }
-*/
+        pub fn unique(&self, key: u64) {
+            let wt = self.write_arc.lock().unwrap();
+
+        }
+    */
     pub fn purge(&self) {
         let mut buckets_w = self.write_arc.lock().unwrap();
         let slock = self.store_file.lock().unwrap();

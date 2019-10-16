@@ -1,30 +1,25 @@
 #[macro_use]
 extern crate may;
 
-use evmap::{self, ReadHandle, WriteHandle};
 use may::net::TcpListener;
-use nohash_hasher::BuildNoHashHasher;
 use std::fs::OpenOptions;
 use std::sync::{Arc, Mutex};
 
 mod cli_util;
 mod optimizer;
 mod tcp_server;
+mod types;
 mod uskv;
 
+use types::{HasherType, Reader, Writer};
 use uskv::Uskv;
-
-pub type Reader =
-    ReadHandle<u64, u64, (), ::std::hash::BuildHasherDefault<nohash_hasher::NoHashHasher<u64>>>;
-pub type Writer =
-    WriteHandle<u64, u64, (), ::std::hash::BuildHasherDefault<nohash_hasher::NoHashHasher<u64>>>;
 
 fn main() {
     let (host, store_path, fragment_path) = cli_util::set_opts_get_opts();
     cli_util::print_banner();
 
     let (buckets_r, buckets_w): (Reader, Writer) = evmap::Options::default()
-        .with_hasher(BuildNoHashHasher::<u64>::default())
+        .with_hasher(HasherType::default())
         .construct::<u64, u64>();
 
     let arc_writer = Arc::new(Mutex::new(buckets_w));

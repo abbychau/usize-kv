@@ -10,7 +10,6 @@ edition = "2018"
 evmap = "7.1.0"
 may = "0.3.12"
 getopts = "0.2.21"
-nohash-hasher = "0.1.2"
 
 [dev-dependencies]
 criterion = "0.3.0"

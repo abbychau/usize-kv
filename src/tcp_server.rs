@@ -46,7 +46,7 @@ pub fn start_server(
                         ms.write(&[0]).unwrap();
                     }
                     2 => {
-                        // need store lock and fragment lock 
+                        // need store lock and fragment lock
                         engine.update(u64::from_be_bytes(key), u64::from_be_bytes(val));
                         ms.write(&[0]).unwrap();
                     }
