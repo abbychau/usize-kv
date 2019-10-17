@@ -3,3 +3,6 @@
 fragment.uskv
 store.uskv
 /.idea
+**/*.class
+.vscode/launch.json
+tcp_reader_examples/a.out
