@@ -1,5 +1,6 @@
 use getopts::Options;
 use std::env;
+use std::process;
 
 pub fn print_banner() {
     println!(
@@ -71,6 +72,8 @@ pub fn set_opts_get_opts() -> (String, String, String) {
             "fragment.uskv".to_string()
         }
     };
+    println!("Process ID: {}", process::id());
+
 
     (host, filename, fragment)
 }

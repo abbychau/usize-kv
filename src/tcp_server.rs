@@ -24,8 +24,10 @@ pub fn start_server(
         for stream in listener.incoming() {
             let mut c = [0 as u8; 24];
             let engine = engine_master.clone();
+            
             go!(move || {
                 let mut ms = stream.unwrap();
+                //let mut out = 0;
                 loop {
                     if let Err(_) = ms.read(&mut c) {
                         break;
@@ -42,6 +44,8 @@ pub fn start_server(
                                 for item in res.unwrap() {
                                     out_store.extend_from_slice(&item.to_be_bytes());
                                 }
+                                //out+=1;
+                                //println!("{}",out);
                                 if let Err(_) = ms.write(&out_store){
                                     break;
                                 }
@@ -51,7 +55,9 @@ pub fn start_server(
                         1 => {
                             // need store lock
                             engine.append(u64::from_be_bytes(key), u64::from_be_bytes(val));
-                            ms.write(&[0]).unwrap();
+                            if let Err(_) = ms.write(&[0]){
+                                break;
+                            }
                         }
                         2 => {
                             // need store lock and fragment lock
@@ -73,6 +79,7 @@ pub fn start_server(
                         }
                     }
                 }
+                //println!("A Client Connection is Ended");
             });
         }
     });
