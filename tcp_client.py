@@ -17,15 +17,14 @@ def call(threadName, times):
         #print(param.hex())
 
         client.send(param)
-        client.recv(1)
-
+        response = client.recv(64)
         #print(response.hex())
     
     # print("%s Ended: %s" % ( threadName, time.ctime(time.time()) ))
 
 
-num = 100
-threadnum = 100
+num = 40000
+threadnum = 1
 th = {}
 for i in range(threadnum):
     th[i] = threading.Thread( target=call, args=("Thread-"+str(i),num) )

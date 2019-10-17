@@ -24,12 +24,13 @@ pub fn start_server(
         for stream in listener.incoming() {
             let mut c = [0 as u8; 24];
             let engine = engine_master.clone();
-            
+            //println!("income");
             go!(move || {
                 let mut ms = stream.unwrap();
+                //ms.set_read_timeout(Some(::std::time::Duration::from_millis(1000))).unwrap();
                 //let mut out = 0;
                 loop {
-                    if let Err(_) = ms.read(&mut c) {
+                    if let Err(_) = ms.read_exact(&mut c) {
                         break;
                     }
                     let key: [u8; 8] = [c[8], c[9], c[10], c[11], c[12], c[13], c[14], c[15]];
@@ -45,7 +46,7 @@ pub fn start_server(
                                     out_store.extend_from_slice(&item.to_be_bytes());
                                 }
                                 //out+=1;
-                                //println!("{}",out);
+                                //print!("[{:?}]",&out_store.len());
                                 if let Err(_) = ms.write(&out_store){
                                     break;
                                 }
