@@ -67,6 +67,8 @@ impl Uskv {
         flock.set_len(0).unwrap();
         buckets_w.purge();
         buckets_w.refresh();
+
+        println!("Purged");
     }
 
     pub fn recover_from_uskv(store_path: &str, fragment_path: &str, w: Arc<Mutex<Writer>>) {
