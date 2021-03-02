@@ -45,14 +45,15 @@ impl Uskv {
         buckets_w.insert(key, value);
         buckets_w.refresh();
     }
+    pub fn remove(&self, key: u64, value: u64) {
+        self.write_arc.lock().unwrap().remove(key,value);
+    }
     /* // require super global operation log.
         pub fn empty(&self, key: u64) {
             self.write_arc.lock().unwrap().empty(key);
         }
 
-        pub fn remove(&self, key: u64, value: u64) {
-            self.write_arc.lock().unwrap().remove(key,value);
-        }
+
 
         pub fn unique(&self, key: u64) {
             let wt = self.write_arc.lock().unwrap();
@@ -75,9 +76,11 @@ impl Uskv {
         let mut buckets_w = w.lock().unwrap();
 
         if !Path::new(store_path).exists() {
+            println!("Creating Store File");
             File::create(store_path).unwrap_or_else(|_| panic!("Cannot create store file."));
         }
         if !Path::new(fragment_path).exists() {
+            println!("Creating Fragment File");
             File::create(fragment_path).unwrap_or_else(|_| panic!("Cannot create fragment file."));
         }
         let mut key_store: [u8; 8] = [0; 8];

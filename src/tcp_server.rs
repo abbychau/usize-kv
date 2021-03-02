@@ -36,7 +36,7 @@ pub fn start_server(
                     let key: [u8; 8] = [c[8], c[9], c[10], c[11], c[12], c[13], c[14], c[15]];
                     let val: [u8; 8] = [c[16], c[17], c[18], c[19], c[20], c[21], c[22], c[23]];
                     match c[7] {
-                        0 => {
+                        0 => {//READ
                             // non-blocking // victim-immune
                             let res = engine.read(u64::from_be_bytes(key));
 
@@ -46,31 +46,37 @@ pub fn start_server(
                                     out_store.extend_from_slice(&item.to_be_bytes());
                                 }
                                 //out+=1;
-                                //print!("[{:?}]",&out_store.len());
+                                // print!("[{:?}]",&out_store.len());
                                 if let Err(_) = ms.write(&out_store){
                                     break;
                                 }
-
                             }
                         }
-                        1 => {
+                        1 => {//APPEND
                             // need store lock
                             engine.append(u64::from_be_bytes(key), u64::from_be_bytes(val));
                             if let Err(_) = ms.write(&[0]){
                                 break;
                             }
                         }
-                        2 => {
+                        2 => {//UPDATE
                             // need store lock and fragment lock
                             engine.update(u64::from_be_bytes(key), u64::from_be_bytes(val));
+                            match ms.write(&[0]){
+                                Ok(_o)=>{},
+                                Err(_e)=>{}
+                            }
+                        }
+                        3 => {//REMOVE
+                            engine.remove(u64::from_be_bytes(key), u64::from_be_bytes(val));
                             ms.write(&[0]).unwrap();
                         }
-                        3 => {
+                        4 => {
                             // stop the world
                             engine.purge();
                             ms.write(b"purged").unwrap();
                         }
-                        4 => {
+                        5 => {
                             engine.read_handle.for_each(|k, vs| {
                                 println!("{:?} : {:?}", k, vs);
                             });
