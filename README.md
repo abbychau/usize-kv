@@ -31,7 +31,7 @@ It is specialized for one-to-many relation for NOSQL / key-less structure of dat
 00000120: 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00    ................
 ```
 3. Read Lock-less and Read-Write isolation. That writing will never produce locks to harm reading performance.
-![Read throughput](https://github.com/jonhoo/rust-evmap/raw/master/benchmark/read-throughput.png)
+![Read throughput](https://cdn0.zkiz.com/file/realblog/user_files/733/603f36a395f45image-1614755490809.png)
 4. Total binary transaction from internal to TCP communication.
 
 ## usage
