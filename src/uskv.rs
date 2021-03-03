@@ -38,12 +38,15 @@ impl Uskv {
             slock.write(&value.to_be_bytes()).unwrap();
         }
 
-        let mut flock = self.fragment_file.lock().unwrap();
-        flock.write(&key.to_be_bytes()).unwrap();
-        drop(flock);
-        let mut buckets_w = self.write_arc.lock().unwrap();
-        buckets_w.insert(key, value);
-        buckets_w.refresh();
+        // let mut flock = self.fragment_file.lock().unwrap();
+        // flock.write(&key.to_be_bytes()).unwrap();
+        // drop(flock);
+        {
+            let mut buckets_w = self.write_arc.lock().unwrap();
+            buckets_w.remove(key, value);
+            buckets_w.insert(key, value);
+            buckets_w.refresh();
+        }
     }
     pub fn remove(&self, key: u64, value: u64) {
         self.write_arc.lock().unwrap().remove(key,value);
@@ -72,6 +75,18 @@ impl Uskv {
         println!("Purged");
     }
 
+    pub fn optimize_store_file(&self){
+        let mut slock = self.store_file.lock().unwrap();
+        slock.set_len(0).unwrap();
+        self.read_handle.for_each(|key,val|{
+            for in_val in val {
+                slock.write(&key.to_be_bytes()).unwrap();
+                slock.write(&in_val.to_be_bytes()).unwrap();
+            }
+        })
+
+
+    }
     pub fn recover_from_uskv(store_path: &str, fragment_path: &str, w: Arc<Mutex<Writer>>) {
         let mut buckets_w = w.lock().unwrap();
 
@@ -86,6 +101,7 @@ impl Uskv {
         let mut key_store: [u8; 8] = [0; 8];
         let mut value_store: [u8; 8] = [0; 8];
         let mut accum: usize = 0;
+        let mut stepped: usize = 0;
         for data in fs::read(store_path).expect("Error reading file for recovery") {
             if accum <= 7 {
                 key_store[accum] = data;
@@ -98,10 +114,12 @@ impl Uskv {
                     u64::from_be_bytes(value_store),
                 );
                 accum = 0;
+                stepped += 1;
             } else {
                 accum += 1;
             }
         }
+        println!("Data Step: {}",stepped);
         buckets_w.refresh();
     }
 }

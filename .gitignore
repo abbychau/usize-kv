@@ -6,3 +6,4 @@ store.uskv
 **/*.class
 .vscode/launch.json
 tcp_reader_examples/a.out
+.DS_Store

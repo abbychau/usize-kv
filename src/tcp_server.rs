@@ -74,12 +74,16 @@ pub fn start_server(
                         4 => {
                             // stop the world
                             engine.purge();
-                            ms.write(b"purged").unwrap();
+                            ms.write(&[0]).unwrap();
                         }
                         5 => {
                             engine.read_handle.for_each(|k, vs| {
                                 println!("{:?} : {:?}", k, vs);
                             });
+                        }
+                        9 => {
+                            engine.optimize_store_file();
+                            ms.write(&[0]).unwrap();
                         }
                         _ => {
                             ms.write(&[255, 255]).unwrap();
