@@ -41,7 +41,7 @@ pub fn set_opts_get_opts() -> (String, String, String) {
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => m,
-        Err(f) => panic!(f.to_string()),
+        Err(f) => panic!("{}", f.to_string()),
     };
     if matches.opt_present("h") {
         print_usage(&program, opts);
